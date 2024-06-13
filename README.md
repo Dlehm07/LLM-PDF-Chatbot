@@ -1,5 +1,5 @@
-# LLM PDF Chatbot
- An example LLM chatbot created with Cohere API and Streamlit that references a PDF document.
+# Scheduling Helper
+This app uses an LLM ChatBot to help plan schedules based around studing and home learning.
 
 ## Quick Start
 1. [Fork and then clone this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#about-forks) to a folder on your computer.
