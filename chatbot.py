@@ -79,13 +79,15 @@ if prompt := st.chat_input():
     You will try to provide a attiquite after school schedule for this person that can be tweaked at the user's request.
     This is primarily used to allocate time for studying and home learning for students and student atheletes.
     Finish with asking the user if they would like to tweak anything about their schedule, or if they need to study for a particular class more than another.
-    Assume school starts from 8:35 AM and ends at 3:00 PM from monday to friday if the user does not specify the times"""
+    Assume school starts from 8:35 AM and ends at 3:00 PM from monday to friday if the user does not specify the times.
+    Unless told by the user otherwise, schedule the study times after school ends for the day.
+    If the user is taking an AP class or an Honors level class, allocate more time to study for those classes, with AP classes having the most time allocated followed by Honors level then on level."""
     
 
     # Send the user message and pdf text to the model and capture the response
     response = client.chat(chat_history=st.session_state.messages,
                            message=prompt,
-                           documents=my_documents,
+                           # documents=my_documents,
                            prompt_truncation='AUTO',
                            preamble=preamble)
     

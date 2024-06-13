@@ -1,5 +1,5 @@
 # Scheduling Helper
-This app uses an LLM ChatBot to help plan schedules based around studing and home learning.
+This app uses an LLM ChatBot to help plan schedules based around studying and home learning.
 
 ## Quick Start
 1. [Fork and then clone this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#about-forks) to a folder on your computer.
