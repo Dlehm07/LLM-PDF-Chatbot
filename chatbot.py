@@ -4,6 +4,7 @@
 import streamlit as st
 import cohere
 import fitz # An alias for PyMuPDF
+from io import StringIO
 
 def pdf_to_documents(pdf_path):
     """
@@ -18,7 +19,7 @@ def pdf_to_documents(pdf_path):
         Example return value: [{"title": "Page 1 Section 1", "snippet": "Text snippet..."}, ...]
     """
 
-    doc = fitz.open(pdf_path)
+    doc = fitz.open(stream=pdf_path.read(), filetype="pdf")
     documents = []
     text = ""
     chunk_size = 1000
@@ -44,17 +45,23 @@ with st.sidebar:
         cohere_api_key = st.text_input("Cohere API Key", key="chatbot_api_key", type="password")
         st.markdown("[Get a Cohere API Key](https://dashboard.cohere.ai/api-keys)")
     
-    my_documents = []
-    my_documents = pdf_to_documents('docs/Schedule.pdf')
+   # 
+   # my_documents = pdf_to_documents('docs/Schedule.pdf')
 
-    # st.write(f"Selected document: {selected_doc}")
+ 
+my_documents = []
+
+uploaded_file = st.file_uploader("Drop a PDF file of the courses you are taking here!", type='pdf')
+
+if uploaded_file is not None:
+    my_documents = pdf_to_documents(uploaded_file)
 
 # Set the title of the Streamlit app
 st.title("💬 Schedule Manager")
 
 # Initialize the chat history with a greeting message
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "text": "Hi! I'm your personal Study Schedule Manager. Lets start by telling me what classes you are taking and if you have any after school activities. Please let me know if the schedule provided needs to be tweaked for your benefit."}]
+    st.session_state["messages"] = [{"role": "assistant", "text": "Hi! I'm your personal Study Schedule Manager. Lets start by telling me to 'make a schedule based off of the uploaded PDF'. Please let me know if the schedule provided needs to be tweaked for your benefit."}]
 
 # Display the chat messages
 for msg in st.session_state.messages:
@@ -81,13 +88,14 @@ if prompt := st.chat_input():
     Finish with asking the user if they would like to tweak anything about their schedule, or if they need to study for a particular class more than another.
     Assume school starts from 8:35 AM and ends at 3:00 PM from monday to friday if the user does not specify the times.
     Unless told by the user otherwise, schedule the study times after school ends for the day.
-    If the user is taking an AP class or an Honors level class, allocate more time to study for those classes, with AP classes having the most time allocated followed by Honors level then on level."""
+    If the user is taking an AP class or an Honors level class, allocate more time to study for those classes, with AP classes having the most time allocated followed by Honors level then on level.
+    When producing the schedule, automatically produce it visually."""
     
 
     # Send the user message and pdf text to the model and capture the response
     response = client.chat(chat_history=st.session_state.messages,
                            message=prompt,
-                           # documents=my_documents,
+                           documents=my_documents,
                            prompt_truncation='AUTO',
                            preamble=preamble)
     
